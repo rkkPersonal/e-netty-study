@@ -1,0 +1,64 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: easy-trip
+
+---
+spring:
+  datasource: # 数据源的相关配置
+    type: com.mysql.cj.jdbc.MysqlDataSource         # 数据源类型：HikariCP
+    driver-class-name: com.mysql.cj.jdbc.Driver         # mysql驱动
+    url: jdbc:mysql://rm-bp14i4t7mbn76n863jo.mysql.rds.aliyuncs.com:3306/study?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    user: steven24
+    password: steven@24
+    hikari:
+      connection-timeout: 60000       # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 默认:30秒
+      minimum-idle: 5                 # 最小连接数
+      maximum-pool-size: 100           # 最大连接数
+      auto-commit: true               # 自动提交
+      idle-timeout: 600000            # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
+      pool-name: DateSourceHikariCP     # 连接池名字
+      max-lifetime: 30000           # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟 1800000ms
+      connection-test-query: SELECT 1
+  servlet:
+    multipart:
+      max-file-size: 512000     # 文件上传大小限制为500kb
+      max-request-size: 512000  # 请求大小限制为500kb
+  main:
+    allow-bean-definition-overriding: true
+login:
+  info:
+    clientId: 8835c32278deb2d44aee
+    clientSecret: a9de2fca2b4d9cb378d331864631e31286bdd897
+    redirectUrl: http://9s5n77.natappfree.cc/api/access/callback
+    state: STATE
+    scope: user
+    accessTokenUrl: https://github.com/login/oauth/access_token
+    authorizeUrl: https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s&state=%s
+
+---
+spring:
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+---
+spring:
+  redis:
+    host: 47.103.158.95
+    password: steven24
+    port: 6379
+    timeout: 10000
+    #    sentinel:
+    #      master: mymaster
+    #      nodes: 192.168.43.200:6379,192.168.43.200:6380
+    #      password: 123456
+    lettuce:
+      pool:
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 0
+        max-active: 100
