@@ -2,10 +2,7 @@ package com.netty.study.client.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,18 +14,24 @@ import java.nio.charset.Charset;
  */
 @ChannelHandler.Sharable
 @Slf4j
-public class ClientHandler extends ChannelInboundHandlerAdapter {
-
+public class ClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        log.info("client receive server message :{}", ((ByteBuf) msg).toString(Charset.defaultCharset()));
-        Channel channel = ctx.channel();  //1
-        channel.write(Unpooled.copiedBuffer("Netty in Action", CharsetUtil.UTF_8));
+    public void channelActive(ChannelHandlerContext ctx) {
+        log.info("client is active :",ctx.channel().id());
+        ctx.writeAndFlush(Unpooled.copiedBuffer("Netty rocks!", CharsetUtil.UTF_8));
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        super.exceptionCaught(ctx, cause);
+    public void channelRead0(ChannelHandlerContext ctx,
+                             ByteBuf in) {
+        System.out.println("Client received: " + in.toString(CharsetUtil.UTF_8));    //3
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx,
+                                Throwable cause) {                    //4
+        cause.printStackTrace();
+        ctx.close();
     }
 }

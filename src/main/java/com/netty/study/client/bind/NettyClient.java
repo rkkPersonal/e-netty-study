@@ -3,16 +3,22 @@ package com.netty.study.client.bind;
 import com.netty.study.server.NettyChannelInitializer;
 import com.netty.study.ssl.SslContextTool;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpVersion;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
+import java.net.URI;
 
 /**
  * @author Steven
@@ -27,7 +33,7 @@ public class NettyClient  extends SslContextTool {
     private String domain;
 
     public NettyClient(int port) {
-        this(port, "localhost");
+        this(port, "127.0.0.1");
     }
 
     public NettyClient(int port, String domain) {
@@ -40,7 +46,7 @@ public class NettyClient  extends SslContextTool {
     public NettyClient(int port, boolean isWebsocket) {
         this.port = port;
         this.isWebsocket = isWebsocket;
-        this.domain = "localhost";
+        this.domain = "127.0.0.1";
         init();
     }
 
@@ -63,18 +69,23 @@ public class NettyClient  extends SslContextTool {
             // Bind and start to accept incoming connections.
             ChannelFuture f = bootstrap.connect(new InetSocketAddress(this.domain, this.port)).sync(); // (7)
             log.info("client bind port :{}", port);
+            URI uri = new URI("http://127.0.0.1:9000");
+            String msg = "Are you ok?";
+            DefaultFullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET,
+                    uri.toASCIIString(), Unpooled.wrappedBuffer(msg.getBytes("UTF-8")));
+
+            // 构建http请求
+            request.headers().set(HttpHeaders.Names.HOST, "127.0.0.1");
+            request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
+            request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
+            // 发送http请求
+            f.channel().write(request);
+            f.channel().flush();
+
             // Wait until the server socket is closed.
             // In this example, this does not happen, but you can do that to gracefully
             // shut down your server.
-
-            f.channel().writeAndFlush("Hi Client 开始发送数据.....");
-            f.channel().closeFuture().addListener(future -> {
-                if (future.isSuccess()) {
-                    log.info("端口绑定成功:{}", port);
-                } else {
-                    future.cause().printStackTrace();
-                }
-            }).sync();
+            f.channel().closeFuture().sync();
         } catch (Exception exception) {
             exception.printStackTrace();
         } finally {
