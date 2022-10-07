@@ -1,6 +1,6 @@
 package com.netty.study.client.bind;
 
-import com.netty.study.server.NettyChannelInitializer;
+import com.netty.study.client.initializer.NettyClientChannelInitializer;
 import com.netty.study.ssl.SslContextTool;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
@@ -64,7 +64,7 @@ public class NettyClient  extends SslContextTool {
                     .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                     .channel(NioSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.DEBUG))
-                    .handler(new NettyChannelInitializer(sslContext, true, this.isWebsocket, true));       // 连接到达时会创建一个通道
+                    .handler(new NettyClientChannelInitializer(sslContext,  this.isWebsocket));       // 连接到达时会创建一个通道
             // (6)
             // Bind and start to accept incoming connections.
             ChannelFuture f = bootstrap.connect(new InetSocketAddress(this.domain, this.port)).sync(); // (7)

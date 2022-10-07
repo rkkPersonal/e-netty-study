@@ -34,6 +34,11 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
         HttpRequest request = null;
         if (msg instanceof HttpRequest) {
             request = (HttpRequest) msg;
+
+            if(HttpUtil.is100ContinueExpected(request)){
+                ctx.write(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE));
+            }
+
             String uri = request.uri();
             log.info("服务端收到请求地址  :{}", uri);
         }
