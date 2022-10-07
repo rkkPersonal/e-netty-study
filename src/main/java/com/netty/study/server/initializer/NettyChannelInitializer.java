@@ -50,7 +50,7 @@ public class NettyChannelInitializer extends ChannelInitializer<SocketChannel> {
         }
         pipeline.addLast("decoder", new HttpRequestDecoder());  //3
         pipeline.addLast("encoder", new HttpResponseEncoder());  //4
-        pipeline.addLast("codec", new HttpServerCodec());  //2
+        /*pipeline.addLast("codec", new HttpServerCodec());  //2*/
         pipeline.addLast("compressor", new HttpContentCompressor()); //4
         pipeline.addLast("httpServerException", new HttpServerExpectContinueHandler());
         if (this.isWebsocket) {

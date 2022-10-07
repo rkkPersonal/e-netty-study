@@ -24,6 +24,10 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 @Slf4j
 @ChannelHandler.Sharable
 public class HttpServerHandler extends ChannelInboundHandlerAdapter {
+
+    private static final String FAVICON_ICO = "/favicon.ico";
+
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.info("server is active :{}", ctx.channel().id());
@@ -63,7 +67,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             if (HttpUtil.isKeepAlive(request)) {
                 responseHeaders.set(CONNECTION, HttpHeaderValues.KEEP_ALIVE.toString());
             }
-            ctx.writeAndFlush(response);
+            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);;
             log.info("响应成功返回.......");
 
         }
