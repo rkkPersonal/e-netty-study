@@ -1,7 +1,9 @@
 package com.netty.study.server.handler.http;
 
+import com.alibaba.fastjson.JSON;
 import com.netty.study.bean.User;
 import com.netty.study.serializer.JSONSerializer;
+import com.netty.study.util.HttpWrapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -38,13 +40,16 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
         HttpRequest request = null;
         if (msg instanceof HttpRequest) {
             request = (HttpRequest) msg;
-
-            if(HttpUtil.is100ContinueExpected(request)){
+            String uri = request.uri();
+            HttpMethod method = request.method();
+            if (HttpUtil.is100ContinueExpected(request)) {
                 ctx.write(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE));
             }
-
-            String uri = request.uri();
-            log.info("服务端收到请求地址  :{}", uri);
+            log.info("服务端收到请求地址  :{}", request.uri());
+            if (method.equals(HttpMethod.GET)) {
+                User user = HttpWrapper.queryParameter(uri, User.class);
+                log.info("请求参数:{}", JSON.toJSONString(user));
+            }
         }
         if (msg instanceof HttpContent) {
             HttpContent content = (HttpContent) msg;
@@ -62,12 +67,13 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             byte[] responseBody = jsonSerializer.serialize(user);
             FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK, Unpooled.wrappedBuffer(responseBody));
             HttpHeaders responseHeaders = response.headers();
-            responseHeaders.set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
+            responseHeaders.set(HttpHeaderNames.CONTENT_TYPE, "application/json");
             responseHeaders.set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
             if (HttpUtil.isKeepAlive(request)) {
                 responseHeaders.set(CONNECTION, HttpHeaderValues.KEEP_ALIVE.toString());
             }
-            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);;
+            ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+            ;
             log.info("响应成功返回.......");
 
         }
@@ -80,7 +86,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("服务端异常 ", cause.getMessage());
+        log.error("服务端异常:{}", cause.getMessage());
         ctx.close();
     }
 }

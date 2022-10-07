@@ -68,19 +68,6 @@ public class NettyClient  extends SslContextTool {
             // (6)
             // Bind and start to accept incoming connections.
             ChannelFuture f = bootstrap.connect(new InetSocketAddress(this.domain, this.port)).sync(); // (7)
-            log.info("client bind port :{}", port);
-            URI uri = new URI("http://127.0.0.1:9000");
-            String msg = "Are you ok?";
-            DefaultFullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET,
-                    uri.toASCIIString(), Unpooled.wrappedBuffer(msg.getBytes("UTF-8")));
-
-            // 构建http请求
-            request.headers().set(HttpHeaders.Names.HOST, "127.0.0.1");
-            request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
-            request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
-            // 发送http请求
-            f.channel().write(request);
-            f.channel().flush();
 
             // Wait until the server socket is closed.
             // In this example, this does not happen, but you can do that to gracefully
