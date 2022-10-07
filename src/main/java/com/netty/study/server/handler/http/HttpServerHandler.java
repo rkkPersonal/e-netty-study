@@ -2,6 +2,7 @@ package com.netty.study.server.handler.http;
 
 import com.alibaba.fastjson.JSON;
 import com.netty.study.bean.User;
+import com.netty.study.method.HttpMethodFactory;
 import com.netty.study.serializer.JSONSerializer;
 import com.netty.study.util.HttpWrapper;
 import io.netty.buffer.ByteBuf;
@@ -37,9 +38,9 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        HttpRequest request = null;
-        if (msg instanceof HttpRequest) {
-            request = (HttpRequest) msg;
+        FullHttpRequest request = null;
+        if (msg instanceof FullHttpRequest) {
+            request = (FullHttpRequest) msg;
             String uri = request.uri();
             HttpMethod method = request.method();
             if (HttpUtil.is100ContinueExpected(request)) {
@@ -49,6 +50,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             if (method.equals(HttpMethod.GET)) {
                 User user = HttpWrapper.queryParameter(uri, User.class);
                 log.info("请求参数:{}", JSON.toJSONString(user));
+                HttpMethodFactory.getMethod("");
             }
         }
         if (msg instanceof HttpContent) {
@@ -63,7 +65,6 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             user.setHobby("Play Basketball");
             JSONSerializer jsonSerializer = new JSONSerializer();
 
-            //将Java对象序列化成为二级制数据包
             byte[] responseBody = jsonSerializer.serialize(user);
             FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK, Unpooled.wrappedBuffer(responseBody));
             HttpHeaders responseHeaders = response.headers();
