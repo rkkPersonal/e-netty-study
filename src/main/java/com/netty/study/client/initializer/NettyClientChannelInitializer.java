@@ -8,6 +8,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
@@ -57,6 +58,7 @@ public class NettyClientChannelInitializer extends ChannelInitializer<SocketChan
         if (this.isWebsocket) {
             pipeline.addLast(new ChunkedWriteHandler());
             pipeline.addLast("aggegator", new HttpObjectAggregator(512 * 1024));
+            pipeline.addLast("websocketClientCompression", new WebSocketServerCompressionHandler()); // WebSocket 数据压缩扩展
             pipeline.addLast(new WebSocketServerProtocolHandler("/websocket", "websocket", false));
             pipeline.addLast(websocketTextFrameHandler);
         } else {
