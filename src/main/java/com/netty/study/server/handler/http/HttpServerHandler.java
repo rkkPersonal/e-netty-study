@@ -14,6 +14,8 @@ import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import static io.netty.handler.codec.http.HttpUtil.is100ContinueExpected;
 
@@ -45,7 +47,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                 ctx.write(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE));
             }
             String uri = request.uri();
-            if (FAVICON_ICO.equals(uri)){
+            if (FAVICON_ICO.equals(uri)) {
                 return;
             }
 
@@ -57,15 +59,27 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             }
         }
         if (msg instanceof HttpContent) {
-            HttpContent content = (HttpContent) msg;
-            ByteBuf buf = content.content();
-            log.info("请求内容:{}", buf.toString(CharsetUtil.UTF_8));
-            buf.release();
+
             HttpMethod method = request.method();
-            if (method.equals(HttpMethod.GET)) {
+            if (HttpMethod.GET.equals(method)) {
                 User user = User.builder().username("steven").data(LocalDateTime.now().toString()).hobby("Play Basketball").build();
                 com.netty.study.method.HttpMethod httpGetMethod = HttpMethodFactory.getMethod(HttpMethodFactory.GET);
                 httpGetMethod.writer(ctx, user);
+            } else if (HttpMethod.POST.equals(method)) {
+                ByteBuf buf = null;
+                try {
+                    HttpContent content = (HttpContent) msg;
+                    buf = content.content();
+                    log.info("请求内容:{}", buf.toString(CharsetUtil.UTF_8));
+                    User user = User.builder().username("steven").data(LocalDateTime.now().toString()).hobby("Play Basketball").build();
+                    com.netty.study.method.HttpMethod httpGetMethod = HttpMethodFactory.getMethod(HttpMethodFactory.GET);
+                    httpGetMethod.writer(ctx, user);
+                } finally {
+                    if (buf != null)
+                        buf.release();
+                }
+
+
             }
 
 
