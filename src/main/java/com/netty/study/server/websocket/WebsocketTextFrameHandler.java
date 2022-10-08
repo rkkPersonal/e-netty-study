@@ -13,8 +13,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Steven
@@ -69,7 +70,7 @@ public class WebsocketTextFrameHandler extends SimpleChannelInboundHandler<TextW
                 }
 
             } else {
-                channel.writeAndFlush(new TextWebSocketFrame("在线人数：" + NettyTool.getUserChannelGroup().size() + "---[You]" + msg.text()));
+                channel.writeAndFlush(new TextWebSocketFrame("在线人数：" + NettyTool.getUserChannelGroup().size() + "--[You]" + msg.text()));
             }
         }
 
