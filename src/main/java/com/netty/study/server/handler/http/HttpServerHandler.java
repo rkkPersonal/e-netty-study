@@ -45,6 +45,10 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                 ctx.write(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE));
             }
             String uri = request.uri();
+            if (FAVICON_ICO.equals(uri)){
+                return;
+            }
+
             HttpMethod method = request.method();
             log.info("服务端收到请求地址  :{}", request.uri());
             if (method.equals(HttpMethod.GET)) {
