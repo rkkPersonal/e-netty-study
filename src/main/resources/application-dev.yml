@@ -7,21 +7,21 @@ spring:
 
 ---
 spring:
-  datasource: # 数据源的相关配置
-    type: com.zaxxer.hikari.HikariDataSource          # 数据源类型：HikariCP
-    driver-class-name: com.mysql.cj.jdbc.Driver          # mysql驱动
-    url: jdbc:mysql://rm-bp14i4t7mbn76n863jo.mysql.rds.aliyuncs.com:3306/study?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
-    user: steven24
-    password: steven@24
-    hikari:
-      connection-timeout: 60000       # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 默认:30秒
-      minimum-idle: 5                 # 最小连接数
-      maximum-pool-size: 100           # 最大连接数
-      auto-commit: true               # 自动提交
-      idle-timeout: 600000            # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
-      pool-name: DateSourceHikariCP     # 连接池名字
-      max-lifetime: 30000           # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟 1800000ms
-      connection-test-query: SELECT 1
+#  datasource: # 数据源的相关配置
+#    type: com.zaxxer.hikari.HikariDataSource          # 数据源类型：HikariCP
+#    driver-class-name: com.mysql.cj.jdbc.Driver          # mysql驱动
+#    url: jdbc:mysql://rm-bp14i4t7mbn76n863jo.mysql.rds.aliyuncs.com:3306/study?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+#    user: steven24
+#    password: steven@24
+#    hikari:
+#      connection-timeout: 60000       # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 默认:30秒
+#      minimum-idle: 5                 # 最小连接数
+#      maximum-pool-size: 100           # 最大连接数
+#      auto-commit: true               # 自动提交
+#      idle-timeout: 600000            # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
+#      pool-name: DateSourceHikariCP     # 连接池名字
+#      max-lifetime: 30000           # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟 1800000ms
+#      connection-test-query: SELECT 1
   servlet:
     multipart:
       max-file-size: 512000     # 文件上传大小限制为500kb

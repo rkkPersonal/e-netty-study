@@ -10,10 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableConfigurationProperties
 @EnableScheduling
 @EnableRetry
-public class EasyTripApplication {
+public class NettyServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EasyTripApplication.class, args);
+        SpringApplication.run(NettyServerApplication.class, args);
 
     }
 

@@ -62,7 +62,7 @@ public class NettyChannelInitializer extends ChannelInitializer<SocketChannel> {
             pipeline.addLast("aggegator", new HttpObjectAggregator(512 * 1024));
             pipeline.addLast("websocketCompression", new WebSocketServerCompressionHandler()); // WebSocket 数据压缩扩展
             /*pipeline.addLast(new HttpRequestHandler(PATH));*/
-            pipeline.addLast(new WebSocketServerProtocolHandler(PATH, PROTOCOLS, false,65536 * 10));
+            pipeline.addLast(new WebSocketServerProtocolHandler(PATH, PROTOCOLS, true,65536 * 10));
             pipeline.addLast(websocketTextFrameHandler);
         } else {
             pipeline.addLast("compressor", new HttpContentCompressor()); //4

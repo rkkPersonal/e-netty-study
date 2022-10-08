@@ -1,6 +1,6 @@
 package com.easy.trip;
 
-import com.netty.study.EasyTripApplication;
+import com.netty.study.NettyServerApplication;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
-@SpringBootTest(classes = EasyTripApplication.class)
+@SpringBootTest(classes = NettyServerApplication.class)
 @RunWith(value = SpringRunner.class)
 @ActiveProfiles("dev")
 class EasyTripApplicationTests {
@@ -78,8 +78,8 @@ class EasyTripApplicationTests {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        if(b){
-            path = fileName + File.separator +name;
+        if (b) {
+            path = fileName + File.separator + name;
         }
         return path;
     }

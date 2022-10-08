@@ -115,7 +115,7 @@ public class WebsocketTextFrameHandler extends SimpleChannelInboundHandler<TextW
         Channel incoming = ctx.channel();
         log.info("Client:" + incoming.remoteAddress() + "异常");
         // 当出现异常就关闭连接
-        log.error("系统异常:{}", cause.getMessage());
+        log.error("服务异常:{}",cause);
         ctx.close();
     }
 }
