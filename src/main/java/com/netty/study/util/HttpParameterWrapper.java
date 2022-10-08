@@ -21,7 +21,7 @@ import java.util.Map;
  * @author Steven
  * @date 2022年10月08日 1:11
  */
-public class HttpWrapper<T> {
+public class HttpParameterWrapper<T> {
 
     public static <T> T queryParameter(String uri, Class<T> tClass) {
         QueryStringDecoder queryDecoder = new QueryStringDecoder(uri, Charsets.toCharset(CharEncoding.UTF_8));

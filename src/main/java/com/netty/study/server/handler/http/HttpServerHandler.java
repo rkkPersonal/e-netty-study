@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.netty.study.bean.User;
 import com.netty.study.exception.HandlerExceptionResolver;
 import com.netty.study.method.HttpMethodFactory;
-import com.netty.study.util.HttpWrapper;
+import com.netty.study.util.HttpParameterWrapper;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -47,7 +47,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             }
             log.info("服务端收到请求地址  :{}", request.uri());
             if (method.equals(HttpMethod.GET)) {
-                User requestBody = HttpWrapper.queryParameter(uri, User.class);
+                User requestBody = HttpParameterWrapper.queryParameter(uri, User.class);
                 log.info("请求参数:{}", JSON.toJSONString(requestBody));
             }
         }
