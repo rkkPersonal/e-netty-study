@@ -55,7 +55,6 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                 User user = HttpWrapper.queryParameter(uri, User.class);
                 log.info("请求参数:{}", JSON.toJSONString(user));
                 com.netty.study.method.HttpMethod getMethod = HttpMethodFactory.getMethod(HttpMethodFactory.GET);
-                getMethod.response(ctx,null);
             }
         }
         if (msg instanceof HttpContent) {

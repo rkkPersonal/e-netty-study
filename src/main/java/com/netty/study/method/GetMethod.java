@@ -9,9 +9,8 @@ import io.netty.handler.codec.http.FullHttpResponse;
  * @date 2022年10月08日 1:56
  */
 public class GetMethod implements HttpMethod{
-
     @Override
-    public void response(ChannelHandlerContext ctx,FullHttpResponse response) {
+    public void response(ChannelHandlerContext ctx, FullHttpResponse response) {
 
     }
 
