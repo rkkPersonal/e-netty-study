@@ -35,8 +35,6 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-
-
         FullHttpRequest request = null;
         if (msg instanceof FullHttpRequest) {
             request = (FullHttpRequest) msg;
@@ -61,7 +59,6 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
                 User user = User.builder().username("steven").data(LocalDateTime.now().toString()).hobby("Play Basketball").build();
                 com.netty.study.method.HttpMethod httpGetMethod = HttpMethodFactory.getMethod(HttpMethodFactory.GET);
                 httpGetMethod.writer(ctx, user);
-
             }
 
 
