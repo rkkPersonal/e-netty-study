@@ -9,6 +9,8 @@ import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 /**
  * @author Steven
@@ -18,17 +20,13 @@ import java.net.URI;
 public class HttpClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        URI uri = new URI("http://127.0.0.1:9000");
+        URI uri = new URI("http://localhost:8080/user/query?username=steven&data=hi&hobby=movie&username=hhhh");
         String msg = "Are you ok?";
-        DefaultFullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET,
-                uri.toASCIIString(), Unpooled.wrappedBuffer(msg.getBytes("UTF-8")));
-
-        // 构建http请求
+        DefaultFullHttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, URLEncoder.encode( uri.toASCIIString(), "UTF-8"), Unpooled.wrappedBuffer(msg.getBytes("UTF-8")));
         request.headers().set(HttpHeaders.Names.HOST, "127.0.0.1");
         request.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         request.headers().set(HttpHeaders.Names.CONTENT_LENGTH, request.content().readableBytes());
-
-
+        ctx.writeAndFlush(request);
     }
 
     @Override
@@ -38,7 +36,7 @@ public class HttpClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("http client error ",cause.getMessage());
+        log.error("http client error:{} ", cause.getMessage());
         ctx.close();
     }
 

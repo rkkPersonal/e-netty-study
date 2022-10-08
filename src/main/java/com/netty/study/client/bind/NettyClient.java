@@ -19,13 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.Scanner;
 
 /**
  * @author Steven
  * @date 2022年10月06日 1:41
  */
 @Slf4j
-public class NettyClient  extends SslContextTool {
+public class NettyClient extends SslContextTool {
 
     private int port;
     private NioEventLoopGroup bootGroup;
@@ -63,8 +64,8 @@ public class NettyClient  extends SslContextTool {
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                     .channel(NioSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.DEBUG))
-                    .handler(new NettyClientChannelInitializer(sslContext,  this.isWebsocket));       // 连接到达时会创建一个通道
+                    .handler(new LoggingHandler(LogLevel.INFO))
+                    .handler(new NettyClientChannelInitializer(sslContext, this.isWebsocket));       // 连接到达时会创建一个通道
             // (6)
             // Bind and start to accept incoming connections.
             ChannelFuture f = bootstrap.connect(new InetSocketAddress(this.domain, this.port)).sync(); // (7)
@@ -81,7 +82,6 @@ public class NettyClient  extends SslContextTool {
     }
 
 
-
     private void close() {
         if (bootGroup != null) {
             bootGroup.shutdownGracefully();
@@ -90,7 +90,15 @@ public class NettyClient  extends SslContextTool {
 
 
     public static void main(String[] args) {
-        new NettyClient(9000).start();
+        int count = 0;
+        while (true) {
+            log.info("请输入信息:");
+            Scanner scanner = new Scanner(System.in);
+            String next = scanner.next();
+            new NettyClient(8080).start();
+            count++;
+            log.info("在线人数:{}" , count);
+        }
     }
 
 

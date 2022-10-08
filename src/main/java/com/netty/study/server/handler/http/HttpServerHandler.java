@@ -13,6 +13,7 @@ import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
             HttpMethod method = request.method();
             log.info("服务端收到请求地址  :{}", request.uri());
             if (method.equals(HttpMethod.GET)) {
-                User requestBody = HttpParameterWrapper.queryParameter(uri, User.class);
+                User requestBody = HttpParameterWrapper.queryParameter(URLDecoder.decode(uri,"UTF-8"), User.class);
                 log.info("请求参数:{}", JSON.toJSONString(requestBody));
             }
         }
