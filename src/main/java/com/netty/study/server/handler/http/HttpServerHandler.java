@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
+import static io.netty.handler.codec.http.HttpUtil.is100ContinueExpected;
+
 /**
  * @author Steven
  * @date 2022年10月07日 1:14
@@ -35,14 +37,15 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
         FullHttpRequest request = null;
         if (msg instanceof FullHttpRequest) {
             request = (FullHttpRequest) msg;
-            String uri = request.uri();
-            HttpMethod method = request.method();
-            if (HttpUtil.is100ContinueExpected(request)) {
+            if (is100ContinueExpected(request)) {
                 ctx.write(new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.CONTINUE));
             }
+            String uri = request.uri();
+            HttpMethod method = request.method();
             log.info("服务端收到请求地址  :{}", request.uri());
             if (method.equals(HttpMethod.GET)) {
                 User requestBody = HttpParameterWrapper.queryParameter(uri, User.class);
@@ -74,7 +77,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("服务端异常:{}", cause.getMessage());
         if (isHttp) {
-          handlerExceptionResolver.writer(ctx,"如果持续发生，请联系客服进行反馈");
+            handlerExceptionResolver.writer(ctx, "如果持续发生，请联系客服进行反馈");
         }
         ctx.close();
     }
