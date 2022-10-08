@@ -43,7 +43,7 @@ public class NettyServer extends SslContextTool {
         workGroup = new NioEventLoopGroup(10);
     }
 
-    private void start() {
+    public void start() {
         try {
 
             final SslContext sslContext = sslContext();

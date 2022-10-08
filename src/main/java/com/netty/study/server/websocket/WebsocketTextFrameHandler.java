@@ -56,19 +56,20 @@ public class WebsocketTextFrameHandler extends SimpleChannelInboundHandler<TextW
                 boolean active = channel.isActive();
                 if (active) {
                     channel.writeAndFlush(new TextWebSocketFrame("[" + incoming.remoteAddress() + "]" + msg.text()));
-                    Object userInfo = redisTemplate.opsForValue().get(userId);
+                   /* Object userInfo = redisTemplate.opsForValue().get(userId);
                     if (Optional.ofNullable(userInfo).isPresent()) {
                         redisTemplate.delete(userId);
-                    }
+                    }*/
                 } else {
                     //TODO  if use is not online ,The message will be storage to db or cache
                     executor.execute(() -> {
-                        redisTemplate.opsForValue().set(userId, true);
+                        /*redisTemplate.opsForValue().set(userId, true);*/
+                        log.warn("用户不在线: 存储离线信息");
                     });
                 }
 
             } else {
-                channel.writeAndFlush(new TextWebSocketFrame("[you]" + msg.text()));
+                channel.writeAndFlush(new TextWebSocketFrame("在线人数：" + NettyTool.getUserChannelGroup().size() + "---[You]" + msg.text()));
             }
         }
 
@@ -115,7 +116,7 @@ public class WebsocketTextFrameHandler extends SimpleChannelInboundHandler<TextW
         Channel incoming = ctx.channel();
         log.info("Client:" + incoming.remoteAddress() + "异常");
         // 当出现异常就关闭连接
-        log.error("服务异常:{}",cause);
+        log.error("服务异常:{}", cause);
         ctx.close();
     }
 }

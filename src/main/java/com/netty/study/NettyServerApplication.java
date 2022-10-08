@@ -1,5 +1,6 @@
 package com.netty.study;
 
+import com.netty.study.server.bind.NettyServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,6 +15,8 @@ public class NettyServerApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(NettyServerApplication.class, args);
+
+        new NettyServer(8081,true).start();
 
     }
 
