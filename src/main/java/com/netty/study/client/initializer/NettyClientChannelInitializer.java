@@ -54,7 +54,7 @@ public class NettyClientChannelInitializer extends ChannelInitializer<SocketChan
         pipeline.addLast("decoder", new HttpResponseDecoder());  //1
         pipeline.addLast("encoder", new HttpRequestEncoder());  //2
         /*pipeline.addLast("codec", new HttpClientCodec());  //1*/
-        pipeline.addLast("decompressor", new HttpContentDecompressor()); //
+
         if (this.isWebsocket) {
             pipeline.addLast(new ChunkedWriteHandler());
             pipeline.addLast("aggegator", new HttpObjectAggregator(512 * 1024));
@@ -62,6 +62,7 @@ public class NettyClientChannelInitializer extends ChannelInitializer<SocketChan
             pipeline.addLast(new WebSocketServerProtocolHandler("/websocket", "websocket", false));
             pipeline.addLast(websocketTextFrameHandler);
         } else {
+            pipeline.addLast("decompressor", new HttpContentDecompressor()); //
             pipeline.addLast("aggegator", new HttpObjectAggregator(512 * 1024));
             pipeline.addLast(clientHandler);
         }
