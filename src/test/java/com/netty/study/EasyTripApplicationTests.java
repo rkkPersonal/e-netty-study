@@ -1,4 +1,4 @@
-package com.easy.trip;
+package com.netty.study;
 
 import com.netty.study.NettyServerApplication;
 import org.junit.jupiter.api.Test;

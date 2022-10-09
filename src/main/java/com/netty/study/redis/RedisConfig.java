@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class RedisConfig extends CachingConfigurerSupport {
 
     // 哨兵配置
-    @Bean
+   /* @Bean
     public RedisConnectionFactory lettuceConnectionFactory() {
         RedisStandaloneConfiguration redisConnectionFactory = new RedisStandaloneConfiguration();
         redisConnectionFactory.setHostName("47.103.158.95");
@@ -32,7 +32,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         redisConnectionFactory.setPort(6379);
         redisConnectionFactory.setDatabase(0);
         return new LettuceConnectionFactory(redisConnectionFactory);
-    }
+    }*/
 
     /**
      * redisTemplate 配置

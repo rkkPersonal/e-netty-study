@@ -1,4 +1,4 @@
-package com.easy.trip.tis;
+package com.netty.study.tis;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
