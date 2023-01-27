@@ -26,13 +26,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class WebsocketTextFrameHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
-    private static final ThreadPoolExecutor executor =
-            new ThreadPoolExecutor(10, 20, 30L, TimeUnit.SECONDS,
-                    new LinkedBlockingDeque<>(100), r -> new Thread(r, "Work task pool========>>>" + r.hashCode()), (r, executor) -> log.error("线程被拒绝执行了..."));
-
     @Resource
     private RedisTemplate redisTemplate;
-
 
     /**
      * Handle text frame
@@ -63,7 +58,7 @@ public class WebsocketTextFrameHandler extends SimpleChannelInboundHandler<TextW
                     }*/
                 } else {
                     //TODO  if use is not online ,The message will be storage to db or cache
-                    executor.execute(() -> {
+                    incoming.eventLoop().execute(()->{
                         /*redisTemplate.opsForValue().set(userId, true);*/
                         log.warn("用户不在线: 存储离线信息");
                     });
